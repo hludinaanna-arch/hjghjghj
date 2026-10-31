@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Учебные заведения</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-color: #5a5ce6; 
+            --primary-hover: #4a4cd6; 
+            --text-dark: #111; 
+            --text-gray: #6b7280; 
+            --bg-light: #f9fafb; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: #5A5CE6; }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        .auth-buttons { display: flex; gap: 1rem; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* Page Header & Tabs */
+        .page-header { 
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); 
+            padding: 4rem 0 2rem; 
+            text-align: center; 
+            border-bottom-left-radius: 3rem; 
+            border-bottom-right-radius: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        .page-header h1 { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+        .page-header p { font-size: 1.1rem; color: var(--text-gray); max-width: 600px; margin: 0 auto 2rem; }
+        
+        .tabs-container {
+            display: inline-flex;
+            background: #fff;
+            padding: 0.4rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        .tab-btn {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(90, 92, 230, 0.3);
+        }
+        .tab-btn:hover:not(.active) {
+            color: var(--primary-color);
+            background: #f3f4f6;
+        }
+
+        /* Search Bar */
+        .search-container { max-width: 600px; margin: 0 auto 3rem; position: relative; }
+        .search-input {
+            width: 100%; padding: 1rem 1.5rem; padding-right: 3rem;
+            border-radius: 50px; border: 2px solid #e5e7eb; font-size: 1.1rem;
+            outline: none; transition: all 0.3s;
+        }
+        .search-input:focus { border-color: var(--primary-color); box-shadow: 0 4px 15px rgba(90, 92, 230, 0.1); }
+        .search-icon { position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); color: var(--primary-color); font-size: 1.2rem; }
+
+        /* Grid & Cards */
+        .uni-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; padding-bottom: 6rem; }
+        .uni-card { 
+            background: #fff; padding: 2rem; border-radius: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: transform 0.3s; 
+            border-top: 5px solid var(--primary-color); display: flex; flex-direction: column;
+            text-decoration: none; color: inherit;
+        }
+        .uni-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .uni-card h3 { font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--text-dark); }
+        .uni-card .loc { color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .uni-card p { font-size: 0.95rem; margin-bottom: 1.5rem; flex-grow: 1; color: #4b5563; }
+        .tags-container { margin-top: auto; }
+        .tag { background: #eef2ff; color: var(--primary-color); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-block; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        
+        .no-results { text-align: center; grid-column: 1 / -1; padding: 2rem; color: var(--text-gray); font-size: 1.2rem; display: none; }
+
+        @media (max-width: 768px) { 
+            .header-content { flex-direction: column; gap: 1.5rem; } 
+            nav { flex-wrap: wrap; justify-content: center; } 
+            .page-header h1 { font-size: 2.2rem; } 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/><path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="65" r="8" fill="#5A5CE6"/><path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            <nav>
+                <a href="index.html">Главная</a>
+                <a href="universities.html" style="color: var(--primary-color);">Учебные заведения</a>
+                <a href="olympiads.html">Олимпиады</a>
+                <a href="volunteering.html">Волонтерство</a>
+                <a href="calendar.html">Календарь</a>
+                <a href="reviews.html">Отзывы</a>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-login">Войти</a>
+                <a href="#" class="btn btn-signup">Регистрация</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Выбери свой путь</h1>
+                <p>Сравни ведущие университеты и колледжи Москвы для поступления в 2026 году</p>
+                
+                <!-- TABS SWITCHER -->
+                <div class="tabs-container">
+                    <button class="tab-btn active" id="tab-unis" onclick="switchTab('unis')">Университеты</button>
+                    <button class="tab-btn" id="tab-cols" onclick="switchTab('cols')">Колледжи</button>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Поиск по названию или специальности...">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="uni-list" id="listContainer">
+                <!-- Cards injected by JS -->
+            </div>
+            <div id="noResults" class="no-results">Ничего не найдено. Попробуйте изменить запрос.</div>
+        </section>
+    </main>
+
+    <script>
+        // --- UNIVERSITIES DATA ---
+        const universities = [
+            { name: "НИУ ВШЭ", city: "Москва/СПб", desc: "Лидер в экономике, IT и социальных науках.", tags: ["Economics", "IT", "Social Sciences"] },
+            { name: "МГУ им. Ломоносова", city: "Москва", desc: "Старейший классический университет страны.", tags: ["Science", "Humanities", "Research"] },
+            { name: "МФТИ (Физтех)", city: "Долгопрудный", desc: "Элитный технический вуз с упором на физику и математику.", tags: ["Physics", "Math", "Tech"] },
+            { name: "СПбГУ", city: "Санкт-Петербург", desc: "Один из старейших вузов России с сильными гуманитарными программами.", tags: ["Law", "Philology", "Science"] },
+            { name: "МГТУ им. Баумана", city: "Москва", desc: "Главный технический университет страны.", tags: ["Engineering", "Robotics", "Industry"] },
+            { name: "РАНХиГС", city: "Москва/СПб", desc: "Президентская академия для будущих управленцев.", tags: ["Management", "Public Admin", "Economics"] },
+            { name: "МГИМО", city: "Москва", desc: "Кузница дипломатов и экспертов по международным отношениям.", tags: ["IR", "Diplomacy", "Languages"] },
+            { name: "НИЯУ МИФИ", city: "Москва", desc: "Ведущий вуз в области ядерной физики и кибербезопасности.", tags: ["Nuclear Physics", "Cybersecurity", "IT"] },
+            { name: "СПбПУ Петра Великого", city: "Санкт-Петербург", desc: "Крупнейший политехнический университет.", tags: ["Engineering", "IT", "Economics"] },
+            { name: "Финансовый университет", city: "Москва", desc: "Главный финансовый вуз страны.", tags: ["Finance", "Banking", "Audit"] }
+        ];
+
+        // --- COLLEGES DATA (From your provided list) ---
+        const colleges = [
+            { name: "Колледж МИД России", city: "Москва", desc: "Таможенное дело, юриспруденция, документационное обеспечение.", tags: ["IR", "Customs", "Law"] },
+            { name: "Московский финансовый колледж (Финуниверситет)", city: "Москва", desc: "Экономика, банковское дело, таможенное дело.", tags: ["Economics", "Banking"] },
+            { name: "Юридический колледж МГЮА", city: "Москва", desc: "Правоохранительная деятельность, судебное администрирование.", tags: ["Law", "Security"] },
+            { name: "Колледж РАНХиГС", city: "Москва", desc: "Экономика, менеджмент, разработка ПО.", tags: ["Management", "IT"] },
+            { name: "IThub College", city: "Москва + 200 филиалов", desc: "Программирование, информационные системы.", tags: ["IT", "Programming"] },
+            { name: "Техникум космического приборостроения МГТУ", city: "Москва", desc: "Приборостроение, IT-системы.", tags: ["Space Tech", "IT"] },
+            { name: "Колледж №26 (КАДР)", city: "Москва", desc: "Строительство, эксплуатация зданий, дизайн.", tags: ["Construction", "Design"] },
+            { name: "Колледж «Царицыно»", city: "Москва", desc: "Туризм, гостиничное дело.", tags: ["Tourism", "Hospitality"] }
+        ];
+
+        let currentTab = 'unis';
+        let searchQuery = '';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update buttons styling
+            document.getElementById('tab-unis').classList.toggle('active', tab === 'unis');
+            document.getElementById('tab-cols').classList.toggle('active', tab === 'cols');
+            
+            // Reset search and re-render
+            document.getElementById('searchInput').value = '';
+            searchQuery = '';
+            renderList();
+        }
+
+        function renderList() {
+            const container = document.getElementById('listContainer');
+            const noResults = document.getElementById('noResults');
+            const data = currentTab === 'unis' ? universities : colleges;
+            
+            const filtered = data.filter(item => 
+                item.name.toLowerCase().includes(searchQuery) || 
+                item.tags.some(tag => tag.toLowerCase().includes(searchQuery)) ||
+                item.desc.toLowerCase().includes(searchQuery)
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                container.innerHTML = filtered.map(item => `
+                    <a href="${currentTab === 'unis' ? 'university-detail.html' : 'college-detail.html'}?name=${encodeURIComponent(item.name)}" class="uni-card">
+                        <h3>${item.name}</h3>
+                        <div class="loc"><i class="fa-solid fa-location-dot"></i> ${item.city}</div>
+                        <p>${item.desc}</p>
+                        <div class="tags-container">
+                            ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    </a>
+                `).join('');
+            }
+        }
+
+        // Search Logic
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase().trim();
+            renderList();
+        });
+
+        // Initial Render
+        renderList();
+    </script>
+</body>
+</html>
